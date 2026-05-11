@@ -191,6 +191,17 @@ button:hover {
   margin-bottom: 28px;
 }
 
+.block-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.block-actions button {
+  min-width: 150px;
+}
+
 .quote-text {
   margin: 0 0 16px;
   font-size: 1.15rem;

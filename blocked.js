@@ -15,4 +15,13 @@ window.addEventListener('DOMContentLoaded', () => {
   backButton.addEventListener('click', () => {
     window.history.back();
   });
+
+  const optionsButton = document.getElementById('optionsButton');
+  optionsButton.addEventListener('click', () => {
+    if (chrome && chrome.runtime && chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open('options.html', '_blank');
+    }
+  });
 });

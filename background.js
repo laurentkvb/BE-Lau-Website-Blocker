@@ -127,6 +127,10 @@ chrome.runtime.onStartup.addListener(async () => {
   await refreshRules();
 });
 
+chrome.action.onClicked.addListener(() => {
+  chrome.runtime.openOptionsPage();
+});
+
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === ALARM_NAME) {
     await cleanupExpiredUnblocks();
