@@ -3,7 +3,10 @@ const addButton = document.getElementById('addButton');
 const unblockAllButton = document.getElementById('unblockAllButton');
 const reblockAllButton = document.getElementById('reblockAllButton');
 const siteList = document.getElementById('siteList');
+const suggestedList = document.getElementById('suggestedList');
 const statusMessage = document.getElementById('statusMessage');
+
+const suggestedSites = ['linkedin.com', 'facebook.com', 'instagram.com', 'reddit.com'];
 
 let currentState = {
   blockedSites: [],
@@ -46,6 +49,28 @@ function formatCountdown(expiry) {
   const minutes = Math.floor(remaining / 60000);
   const seconds = Math.floor((remaining % 60000) / 1000);
   return `${minutes}:${seconds.toString().padStart(2, '0')} remaining`;
+}
+
+function buildSuggestedChip(domain, isBlocked) {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = `suggested-chip ${isBlocked ? 'blocked' : 'available'}`;
+  chip.dataset.domain = domain;
+  chip.dataset.action = isBlocked ? 'blocked' : 'suggested-add';
+
+  const icon = document.createElement('span');
+  icon.className = 'chip-icon';
+  icon.innerHTML = isBlocked
+    ? '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 10.5L3.5 8l-.7.7L6 12l7-7-.7-.7L6 10.5z" fill="currentColor"/></svg>'
+    : '<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3.5a.75.75 0 0 1 .75.75V7.5h3.25a.75.75 0 0 1 0 1.5H8.75v3.25a.75.75 0 0 1-1.5 0V9H4a.75.75 0 0 1 0-1.5h3.25V4.25A.75.75 0 0 1 8 3.5z" fill="currentColor"/></svg>';
+  chip.appendChild(icon);
+
+  const label = document.createElement('span');
+  label.className = 'chip-label';
+  label.textContent = domain.replace(/^www\./, '');
+  chip.appendChild(label);
+
+  return chip;
 }
 
 function buildSiteEntry(domain, expiry) {
@@ -109,7 +134,17 @@ function updateActionButtons() {
   reblockAllButton.hidden = !hasActiveUnblocks();
 }
 
+function renderSuggestedSites() {
+  suggestedList.innerHTML = '';
+  suggestedSites.forEach((domain) => {
+    const isBlocked = currentState.blockedSites.includes(domain);
+    const chip = buildSuggestedChip(domain, isBlocked);
+    suggestedList.appendChild(chip);
+  });
+}
+
 function renderSiteList() {
+  renderSuggestedSites();
   siteList.innerHTML = '';
   if (!currentState.blockedSites.length) {
     const emptyState = document.createElement('div');
@@ -247,6 +282,27 @@ siteList.addEventListener('click', (event) => {
   } else if (action === 'unblock') {
     updateUnblock(domain, Number(button.dataset.minutes));
   }
+});
+
+suggestedList.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button || button.dataset.action !== 'suggested-add') {
+    return;
+  }
+  const domain = button.dataset.domain;
+  if (!domain) {
+    return;
+  }
+  if (currentState.blockedSites.includes(domain)) {
+    setStatus(`${domain} is already blocked.`, 'info');
+    return;
+  }
+  currentState.blockedSites.push(domain);
+  currentState.blockedSites.sort();
+  saveState().then(() => {
+    renderSiteList();
+    setStatus(`Added ${domain} from suggested sites.`, 'success');
+  });
 });
 
 unblockAllButton.addEventListener('click', unblockAll);

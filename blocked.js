@@ -4,7 +4,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const quoteAuthorElement = document.getElementById('quoteAuthor');
   const backButton = document.getElementById('backButton');
 
-  blockedUrlElement.textContent = document.referrer || 'Unknown site';
+  const urlParams = new URLSearchParams(window.location.search);
+  const originalUrl = urlParams.get('url') || 'Unknown site';
+
+  const link = document.createElement('a');
+  link.href = urlParams.get('url');
+  link.textContent = originalUrl;
+
+  blockedUrlElement.textContent = '';
+  blockedUrlElement.appendChild(link);
 
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];

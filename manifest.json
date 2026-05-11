@@ -3,7 +3,7 @@
   "name": "Website Blocker",
   "description": "Block distracting websites with a focused dashboard and inspirational quotes.",
   "version": "1.0",
-  "permissions": ["declarativeNetRequest", "storage", "alarms", "tabs"],
+  "permissions": ["declarativeNetRequest","declarativeNetRequestFeedback", "storage", "alarms", "tabs"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_title": "Website Blocker"

@@ -63,10 +63,7 @@ function buildRules(domains) {
     id: getRuleIdForDomain(domain, index),
     priority: 1,
     action: {
-      type: 'redirect',
-      redirect: {
-        extensionPath: '/blocked.html'
-      }
+      type: 'block'
     },
     condition: {
       requestDomains: [domain],
@@ -76,6 +73,7 @@ function buildRules(domains) {
 }
 
 async function refreshRules() {
+  await cleanupExpiredUnblocks();
   const { blockedSites = [], unblockExpiries = {} } = await getStorage({
     [STORAGE_KEYS.BLOCKED_SITES]: [],
     [STORAGE_KEYS.UNBLOCK_EXPIRIES]: {}
@@ -129,6 +127,21 @@ chrome.runtime.onStartup.addListener(async () => {
 
 chrome.action.onClicked.addListener(() => {
   chrome.runtime.openOptionsPage();
+});
+
+
+chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((details) => {
+  console.log('Blocked:', details);
+
+  if (details.rule.ruleId >= RULE_ID_BASE) {
+    const blockedUrl = details.request.url;
+
+    chrome.tabs.update(details.request.tabId, {
+      url: chrome.runtime.getURL(
+          'blocked.html?url=' + encodeURIComponent(blockedUrl)
+      )
+    });
+  }
 });
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {

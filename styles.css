@@ -114,6 +114,67 @@ button:hover {
   flex-wrap: wrap;
 }
 
+.suggested-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.suggested-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  color: #1f2937;
+  background: #f8fafc;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.suggested-chip:hover {
+  transform: translateY(-1px);
+}
+
+.suggested-chip.available {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: #eff8ff;
+}
+
+.suggested-chip.blocked {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: default;
+  opacity: 0.8;
+}
+
+.suggested-chip.blocked:hover {
+  transform: none;
+}
+
+.chip-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip-label {
+  font-size: 0.95rem;
+}
+
+.unblock-input {
+  width: 80px;
+  padding: 8px 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -160,6 +221,21 @@ button:hover {
   margin-top: 12px;
 }
 
+
+.unblock-all-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.unblock-all-group input {
+  width: 100px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
 .block-container {
   min-height: 100vh;
   display: grid;
@@ -181,6 +257,7 @@ button:hover {
   margin: 18px 0 24px;
   color: #475569;
   font-size: 0.98rem;
+  word-break: break-word;
 }
 
 .quote-card {
